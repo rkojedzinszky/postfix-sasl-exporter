@@ -237,9 +237,9 @@ func (p *policyServer) lookupStatEntry(saslMethod, saslUsername, serverAddress, 
 var (
 	labels = []string{"sasl_method", "sasl_username", "server_address", "server_port"}
 
-	mailSentCounts     = prometheus.NewDesc("postfix_mail_sent_counts", "Total number of mails sent", labels, nil)
+	mailSentCounts     = prometheus.NewDesc("postfix_mail_sent_mails", "Total number of mails sent", labels, nil)
 	mailSentRecipients = prometheus.NewDesc("postfix_mail_sent_recipients", "Total number of recipients", labels, nil)
-	mailSentSizes      = prometheus.NewDesc("postfix_mail_sent_total_size", "Total size of sent mails", labels, nil)
+	mailSentSizes      = prometheus.NewDesc("postfix_mail_sent_size", "Total size of mails sent", labels, nil)
 )
 
 func (p *policyServer) Describe(desc chan<- *prometheus.Desc) {
