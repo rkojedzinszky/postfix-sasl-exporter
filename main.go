@@ -153,7 +153,9 @@ func (p *policyServer) Collect(m chan<- prometheus.Metric) {
 	}
 }
 
-func (p *policyServer) Handle(req *server.Request) (resp server.Response) {
+func (p *policyServer) Handle(req *server.Request) (resp string) {
+	resp = server.DUNNO
+
 	if req.SaslUsername == "" {
 		return
 	}

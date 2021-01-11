@@ -44,24 +44,23 @@ type Request struct {
 	ServerPort             string
 }
 
-// Response holds a policy response
-type Response struct {
-	Action Action
-}
-
-// Action to perform on policy
-type Action int
-
 // Values for Action
 const (
-	DUNNO  Action = 0
-	ACCEPT Action = 1
-	REJECT Action = 2
+	ACCEPT          = "OK"
+	REJECT          = "REJECT"
+	DEFER           = "DEFER"
+	DEFER_IF_REJECT = "DEFER_IF_REJECT"
+	DEFER_IF_PERMIT = "DEFER_IF_PERMIT"
+	DISCARD         = "DISCARD"
+	DUNNO           = "DUNNO"
+	HOLD            = "HOLD"
+	INFO            = "INFO"
+	WARN            = "WARN"
 )
 
 // Handler interface for handling policy requests
 type Handler interface {
-	Handle(r *Request) Response
+	Handle(r *Request) string
 }
 
 // Run runs a policy listener. On context close waits for all goroutines to finish, then returns.
@@ -146,12 +145,6 @@ func readRequest(ctx context.Context, r *bufio.Reader) (req *Request, err error)
 	return
 }
 
-var actions = []string{"dunno", "accept", "reject"}
-
-func (a Action) String() string {
-	return actions[a]
-}
-
 func handleConnection(ctx context.Context, conn net.Conn, h Handler) {
 	done := make(chan bool)
 	defer close(done)
@@ -176,7 +169,7 @@ func handleConnection(ctx context.Context, conn net.Conn, h Handler) {
 		resp := h.Handle(req)
 
 		conn.SetWriteDeadline(time.Now().Add(time.Second))
-		reply := []byte(fmt.Sprintf("action=%s\n\n", resp.Action.String()))
+		reply := []byte(fmt.Sprintf("action=%s\n\n", resp))
 		if _, err := conn.Write(reply); err != nil {
 			log.Printf("Failed writing response: %+v", err)
 			return

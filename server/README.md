@@ -21,10 +21,10 @@ import (
 
 type s struct{}
 
-func (s *s) Handle(req *server.Request) server.Response {
-	// Do anything with request
+func (s *s) Handle(req *server.Request) string {
+	log.Print("Request=", *req)
 
-	return server.Response{Action: server.REJECT}
+	return server.REJECT
 }
 
 func main() {
