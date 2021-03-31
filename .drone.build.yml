@@ -8,9 +8,7 @@ steps:
 - name: build
   image: golang:1.16-alpine
   commands:
-  - CGO_ENABLED=0 go build .
-  - apk --no-cache add binutils
-  - strip -s postfix-sasl-exporter
+  - CGO_ENABLED=0 go build -ldflags -s .
 
 - name: docker
   image: plugins/docker:19
