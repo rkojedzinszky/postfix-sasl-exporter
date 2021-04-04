@@ -85,6 +85,10 @@ func webListen(ctx context.Context, l net.Listener) {
 }
 
 type statEntry struct {
+	mails      uint64
+	recipients uint64
+	size       uint64
+
 	last time.Time
 
 	// key fields
@@ -92,10 +96,6 @@ type statEntry struct {
 	saslUsername  string
 	serverAddress string
 	serverPort    string
-
-	mails      uint64
-	recipients uint64
-	size       uint64
 }
 
 func (s *statEntry) getLabelValues() []string {
