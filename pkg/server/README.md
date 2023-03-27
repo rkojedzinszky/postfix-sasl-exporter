@@ -16,13 +16,13 @@ import (
 	"log"
 	"net"
 
-	"github.com/rkojedzinszky/postfix-sasl-exporter/server"
+	"github.com/rkojedzinszky/postfix-sasl-exporter/pkg/server"
 )
 
 type s struct{}
 
-func (s *s) Handle(req *server.Request) string {
-	log.Print("Request=", *req)
+func (s *s) Handle(ctx context.Context, req *server.Request) string {
+	log.Printf("Request=%+v", *req)
 
 	return server.REJECT
 }
