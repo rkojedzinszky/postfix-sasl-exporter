@@ -18,7 +18,7 @@ import (
 	"github.com/namsral/flag"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rkojedzinszky/postfix-sasl-exporter/server"
+	"github.com/rkojedzinszky/postfix-sasl-exporter/pkg/server"
 )
 
 type policyServer struct {
@@ -153,7 +153,7 @@ func (p *policyServer) Collect(m chan<- prometheus.Metric) {
 	}
 }
 
-func (p *policyServer) Handle(req *server.Request) (resp string) {
+func (p *policyServer) Handle(ctx context.Context, req *server.Request) (resp string) {
 	resp = server.DUNNO
 
 	if req.SaslUsername == "" {

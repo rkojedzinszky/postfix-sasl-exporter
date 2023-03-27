@@ -1,17 +1,18 @@
 kind: pipeline
 name: build
+type: kubernetes
 
 platform:
   os: linux
 
 steps:
 - name: build
-  image: golang:1.16-alpine
+  image: golang:1.20-alpine
   commands:
   - CGO_ENABLED=0 go build -ldflags -s .
 
 - name: docker
-  image: plugins/docker:19
+  image: plugins/docker:20.10
   settings:
     repo: ghcr.io/rkojedzinszky/postfix-sasl-exporter
     registry: ghcr.io

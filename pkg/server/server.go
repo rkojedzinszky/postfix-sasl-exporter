@@ -60,7 +60,7 @@ const (
 
 // Handler interface for handling policy requests
 type Handler interface {
-	Handle(r *Request) string
+	Handle(ctx context.Context, r *Request) string
 }
 
 // Run runs a policy listener. On context close waits for all goroutines to finish, then returns.
@@ -83,9 +83,9 @@ func Run(ctx context.Context, l net.Listener, h Handler) {
 	wg.Wait()
 }
 
-type parameterSetterFunction func(p *Request, v string)
+type paramParser func(p *Request, v string)
 
-var parameterSetterFunctions map[string]parameterSetterFunction = map[string]parameterSetterFunction{
+var parameterSetterFunctions map[string]paramParser = map[string]paramParser{
 	"request":                  func(p *Request, v string) { p.Request = v },
 	"protocol_state":           func(p *Request, v string) { p.ProtocolState = v },
 	"protocol_name":            func(p *Request, v string) { p.ProtocolName = v },
@@ -166,7 +166,7 @@ func handleConnection(ctx context.Context, conn net.Conn, h Handler) {
 			return
 		}
 
-		resp := h.Handle(req)
+		resp := h.Handle(ctx, req)
 
 		conn.SetWriteDeadline(time.Now().Add(time.Second))
 		reply := []byte(fmt.Sprintf("action=%s\n\n", resp))
